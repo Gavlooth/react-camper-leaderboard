@@ -1,0 +1,84 @@
+body,
+html {
+    height: 100% auto;
+    width: 100% auto;
+}
+body {
+    padding: 10%;
+}
+#Leaderboard_container {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+}
+.field-basic {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    text-align: center;
+    height: 5vw;
+    width: 100%;
+    .rank {
+        width: 10%;
+    }
+    .camper {
+        display:flex;
+        justify-content: center;
+        width: 37%;
+        .container-image{
+            width: 30%;
+            display:flex;
+            justify-content:center;
+            margin:  auto;  
+        }
+        .container-name{
+            width: 70%;
+            text-align: center;
+        }
+
+    }
+    .score {
+        width: 28%;
+    }
+    .points {
+        width: 25%;
+    }
+}
+.camper,
+.points,
+.rank,
+.score {
+    font-size: 1.7vw;
+    border: 1px solid black;
+    line-height: 4vw;
+}
+.field-head {
+    @extend .field-basic;
+    background-color: #B18449;
+}
+.field-even {
+    @extend .field-basic;
+    background-color: #837E7C;
+}
+.field-odd {
+    @extend .field-basic;
+    background-color: #ECE5B6;
+}
+a {
+    text-decoration: none;
+}
+#leatherboardhead{
+     background-color: #3D3C3A;
+     text-align: center;
+     color:lavender;
+     font-size: 4vw;
+     line-height: 4vw;
+
+     height: 5vw;
+     width: 100%;
+}
+img{
+    width:4vw;
+    height:4vw;
+  
+}

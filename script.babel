@@ -1,0 +1,142 @@
+var ConstantBar = React.createClass({
+
+    render: function() {
+        return (
+            <div className="field-head">
+                <div className="rank">
+                    #
+                </div>
+                <div className="camper">
+                    Camper Name
+                </div>
+                <div className="score">
+                    <a href="#" onClick={this.props.click}>
+                        {this.props.clickA}
+                    </a >
+                </div>
+                <div className="points" onClick={this.props.click2}>
+                    <a href="#">
+                        {this.props.clickB}
+                    </a>
+                </div>
+            </div>
+        );
+    }
+});
+
+var Camper = React.createClass({
+
+    render: function() {
+        return (
+
+            <div className={this.props.fieldtype}>
+                <div className="rank">{this.props.enum}</div>
+                <div className="camper">
+                    <div className="container-image"><img src={this.props.data.img}/></div>
+                    <div className="container-name">{this.props.data.username}</div>
+                </div>
+                <div className="score">
+                    {this.props.data.recent}
+                </div>
+                <div className="points">
+                    {this.props.data.alltime}
+                </div>
+            </div>
+        );
+    }
+
+});
+
+function isEvenStrict(n) {
+    return n === parseFloat(n)
+        ? !(n % 2)
+        : void 0;
+};
+
+var AllRanks = React.createClass({
+    getInitialState: function() {
+        return {
+            camperList: [
+                {
+                    "username": "Gavlooth",
+                    "img": 'https://avatars2.githubusercontent.com/u/10321050?v=3&s=460',
+                    "alltime": 1,
+                    "recent": 1,
+                    "lastUpdate": "2000-01-00T05:16:21.255Z"
+                }
+            ],
+            setText: {
+                alpha: 'All time points',
+                beta: 'Points in past 30 days'
+            },
+            setClick: {
+                alpha: function() {},
+                beta: function() {}
+            }
+        };
+    },
+    componentDidMount: function() {
+        $.ajax({
+            url: 'https://fcctop100.herokuapp.com/api/fccusers/top/recent',
+            dataType: 'json',
+            success: function(data) {
+                this.setState({camperList: data});
+                this.setState({
+                    setClick: {
+                        alpha: this.sortBy30Days,
+                        beta: this.sortByAllTime
+                    }
+                });
+            }.bind(this)
+        });
+
+    },
+    sortBy30Days: function() {
+        var rearange = [];
+        rearange = this.state.camperList.sort(function(x, y) {
+            var tmp = parseFloat(x.recent) - parseFloat(y.recent)
+            return tmp;
+        });
+        this.setState({
+            camperList: rearange,
+            setText: {
+                alpha: 'All time points  ▼',
+                beta: 'Points in past 30 days'
+            }
+        });
+    },
+    sortByAllTime: function() {
+        var rearange = [];
+        rearange = this.state.camperList.sort(function(x, y) {
+            var tmp = parseFloat(x.alltime) - parseFloat(y.alltime)
+            return tmp;
+        });
+        this.setState({
+            camperList: rearange,
+            setText: {
+                alpha: 'All time points',
+                beta: 'Points in past 30 days ▼'
+            }
+        });
+
+    },
+
+    render: function() {
+        var commentNodes = this.state.camperList.map(function(x, index) {
+            var tmp = '';
+            tmp = isEvenStrict(index + 1)
+                ? 'field-even'
+                : 'field-odd';
+            return <Camper fieldtype={tmp} key={x.username} data={x} enum={index + 1}></Camper>;
+        });
+
+        return (
+            <div>
+                <ConstantBar clickB={this.state.setText.beta} clickA={this.state.setText.alpha} click={this.state.setClick.alpha} click2={this.state.setClick.beta}/> {commentNodes}
+            </div>
+        );
+    }
+});
+
+ReactDOM.render(
+    <AllRanks/>, $('#Leaderboard_container')[0]);
